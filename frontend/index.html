@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Engine Sandbox</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 text-center text-indigo-600">Task Engine Sandbox</h1>
+
+        <!-- Login Form -->
+        <div id="login-section" class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-xl font-semibold mb-4 border-b pb-2">Login</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Email (Username)</label>
+                    <input type="email" id="email" value="admin@example.com" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" value="adminpassword" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <button onclick="login()" class="w-full bg-indigo-600 text-white p-2 rounded-md hover:bg-indigo-700 transition">Login & Save Token</button>
+            </div>
+        </div>
+
+        <!-- Authenticated Section -->
+        <div id="dashboard-section" class="bg-white p-6 rounded-lg shadow-md hidden">
+            <div class="flex justify-between items-center mb-4 border-b pb-2">
+                <h2 class="text-xl font-semibold">Dashboard</h2>
+                <button onclick="logout()" class="text-sm text-red-600 hover:underline">Logout</button>
+            </div>
+            
+            <div class="space-y-4">
+                <button onclick="fetchTasks()" class="w-full bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition">Fetch My Tasks (GET /tasks/)</button>
+                
+                <div class="mt-4">
+                    <h3 class="text-sm font-medium text-gray-500 mb-2">API Response:</h3>
+                    <pre id="response-output" class="bg-gray-900 text-green-400 p-4 rounded-md overflow-x-auto text-xs min-h-[100px]">Waiting for action...</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "http://localhost:8000/api/v1";
+
+        // Check if already logged in
+        window.onload = () => {
+            const token = localStorage.getItem("token");
+            if (token) {
+                showDashboard();
+            }
+        };
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const formData = new FormData();
+            formData.append('username', email);
+            formData.append('password', password);
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Login failed');
+
+                const data = await response.json();
+                localStorage.setItem("token", data.access_token);
+                showDashboard();
+                alert('Login successful!');
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        async function fetchTasks() {
+            const token = localStorage.getItem("token");
+            const output = document.getElementById('response-output');
+            output.innerText = "Fetching...";
+
+            try {
+                const response = await fetch(`${API_BASE}/tasks/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.status === 401) {
+                    logout();
+                    throw new Error('Session expired');
+                }
+
+                const data = await response.json();
+                output.innerText = JSON.stringify(data, null, 2);
+            } catch (err) {
+                output.innerText = `Error: ${err.message}`;
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.remove('hidden');
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            document.getElementById('login-section').classList.remove('hidden');
+            document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('response-output').innerText = "Waiting for action...";
+        }
+    </script>
+</body>
+</html>
