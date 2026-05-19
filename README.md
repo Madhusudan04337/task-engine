@@ -2,6 +2,14 @@
 
 Scalable async REST API built with FastAPI, PostgreSQL, and SQLAlchemy 2.0.
 
+## Project Deliverables
+
+- ✅ **Backend API:** Robust FastAPI implementation with a modular architecture.
+- ✅ **Authentication & CRUD:** Fully functional JWT-based auth and Task management (Create, Read, Update, Delete).
+- ✅ **Frontend UI:** Interactive sandbox (`frontend/index.html`) to validate and interact with the API endpoints.
+- ✅ **API Documentation:** Automatically generated Interactive API docs via Swagger UI (available at `/docs`).
+- ✅ **Scalability Strategy:** Comprehensive design for horizontal scaling, database optimization, and microservices readiness.
+
 ## Tech Stack
 
 - **Backend:** FastAPI
