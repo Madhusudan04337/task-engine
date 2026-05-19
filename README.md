@@ -41,3 +41,18 @@ task-engine/
    ```bash
    docker-compose up -d
    ```
+
+   ## Scalability & Roadmap
+
+   This project is designed with a **Modular Monolith** architecture, making it ready for horizontal and vertical scaling:
+
+   1.  **Stateless API:** The FastAPI backend is completely stateless. It can be scaled behind a Load Balancer (like Nginx or AWS ALB) to handle thousands of concurrent requests.
+   2.  **Database Scalability:** 
+       - **PostgreSQL Connection Pooling:** Currently using `asyncpg` which natively supports pooling.
+       - **Read Replicas:** For high-traffic applications, the repository layer can be modified to route `GET` requests to a read replica.
+   3.  **Caching (Redis):** While not implemented, the service layer is prepared for a Redis integration to cache frequently accessed data (e.g., user profiles or task lists).
+   4.  **Security:** 
+       - **RBAC:** Fully implemented role-based access control.
+       - **Token Revocation:** Future roadmap includes a Redis-based blocklist for logged-out tokens.
+   5.  **Microservices Ready:** The clear separation between `api`, `services`, and `repositories` allows any module (e.g., the Task service) to be easily extracted into its own microservice if needed.
+
