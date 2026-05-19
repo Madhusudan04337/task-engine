@@ -9,6 +9,7 @@ class Settings(BaseSettings):
 
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "task-engine"
+    DEBUG: bool = True
 
     # Security
     SECRET_KEY: str
@@ -29,6 +30,10 @@ class Settings(BaseSettings):
         if isinstance(v, str):
             return v
         return f"postgresql+asyncpg://{info.data['POSTGRES_USER']}:{info.data['POSTGRES_PASSWORD']}@{info.data['POSTGRES_SERVER']}:{info.data['POSTGRES_PORT']}/{info.data['POSTGRES_DB']}"
+
+    # Initial Superuser
+    FIRST_SUPERUSER_EMAIL: str = "admin@example.com"
+    FIRST_SUPERUSER_PASSWORD: str = "changeme"
 
     # CORS
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
