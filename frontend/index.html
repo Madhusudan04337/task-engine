@@ -23,9 +23,9 @@
 
     <div class="max-w-4xl mx-auto px-4 pb-12">
         <!-- Auth Section -->
-        <div id="auth-section" class="grid md:grid-cols-2 gap-8">
+        <div id="auth-section" class="max-w-md mx-auto">
             <!-- Login -->
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
+            <div id="login-container" class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800">Login</h2>
                 <div class="space-y-4">
                     <div>
@@ -37,11 +37,15 @@
                         <input type="password" id="login-password" value="Friends@123" class="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 outline-none transition">
                     </div>
                     <button onclick="login()" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transform active:scale-95 transition">Access Dashboard</button>
+                    <p class="text-center text-sm text-slate-600 mt-4">
+                        Don't have an account? 
+                        <button onclick="toggleAuth('register')" class="text-indigo-600 font-bold hover:underline">Create one</button>
+                    </p>
                 </div>
             </div>
 
             <!-- Register -->
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
+            <div id="register-container" class="hidden bg-white p-8 rounded-xl shadow-sm border border-slate-200">
                 <h2 class="text-2xl font-bold mb-6 text-slate-800">Create Account</h2>
                 <div class="space-y-4">
                     <div>
@@ -53,6 +57,10 @@
                         <input type="password" id="reg-password" placeholder="••••••••" class="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 outline-none transition">
                     </div>
                     <button onclick="register()" class="w-full bg-slate-800 text-white font-bold py-3 rounded-lg hover:bg-slate-900 transform active:scale-95 transition">Sign Up</button>
+                    <p class="text-center text-sm text-slate-600 mt-4">
+                        Already have an account? 
+                        <button onclick="toggleAuth('login')" class="text-indigo-600 font-bold hover:underline">Login here</button>
+                    </p>
                 </div>
             </div>
         </div>
@@ -194,6 +202,18 @@
         function logout() {
             localStorage.clear();
             location.reload();
+        }
+
+        function toggleAuth(mode) {
+            const loginCont = document.getElementById('login-container');
+            const regCont = document.getElementById('register-container');
+            if (mode === 'register') {
+                loginCont.classList.add('hidden');
+                regCont.classList.remove('hidden');
+            } else {
+                loginCont.classList.remove('hidden');
+                regCont.classList.add('hidden');
+            }
         }
     </script>
 </body>
